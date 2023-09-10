@@ -1,12 +1,48 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_application/additinal_info_section.dart';
+import 'package:weather_application/constructor_variables.dart';
 import 'package:weather_application/hourly_forcust_section.dart';
+import 'package:http/http.dart' as http;
 
-class WatherScreen extends StatelessWidget {
+class WatherScreen extends StatefulWidget {
   const WatherScreen({super.key});
+
+  @override
+  State<WatherScreen> createState() => _WatherScreenState();
+}
+
+class _WatherScreenState extends State<WatherScreen> {
+  double temp = 0;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentWeather();
+  }
+
+  Future getCurrentWeather() async {
+    try {
+      String lat = '22.565571';
+      String lng = '88.370209';
+      final res = await http.get(
+        Uri.parse(
+            "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lng&exclude=current&appid=$kopenWeatherApiKey"),
+      );
+      final data = jsonDecode(res.body);
+      if (data['cod'] != "200") {
+        throw "An unextpected error occured";
+      }
+      setState(() {
+        temp = data['list'][0]['main']['temp'];
+        temp = (temp - 272.15);
+      });
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +83,7 @@ class WatherScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            "300° F",
+                            "${temp.toStringAsFixed(0)}° C",
                             style: GoogleFonts.lato(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
