@@ -21,6 +21,7 @@ class EarlyForCustItem extends StatelessWidget {
               time,
               style:
                   GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.bold),
+              maxLines: 1,
             ),
             const SizedBox(
               height: 8,
@@ -35,6 +36,7 @@ class EarlyForCustItem extends StatelessWidget {
             Text(
               temp,
               style: GoogleFonts.lato(),
+              maxLines: 1,
             ),
           ],
         ),
